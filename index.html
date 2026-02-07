@@ -1,260 +1,340 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>个人网盘</title>
     <style>
-      body {
-        font-family: Arial, sans-serif;
-        margin: 20px;
-        padding: 0;
-        background-color: #f0f0f0;
-      }
-      .container {
-        max-width: 800px;
-        margin: 0 auto;
-        background-color: white;
-        padding: 20px;
-        border-radius: 5px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        margin-bottom: 20px;
-      }
-      h1 {
-        text-align: center;
-        color: #333;
-      }
-      h2 {
-        color: #333;
-        margin-top: 30px;
-        margin-bottom: 20px;
-      }
-      .file-list {
-        margin-top: 20px;
-      }
-      .file-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px;
-        border-bottom: 1px solid #eee;
-      }
-      .file-item:hover {
-        background-color: #f9f9f9;
-      }
-      .file-name {
-        font-weight: bold;
-      }
-      .file-size {
-        color: #666;
-        font-size: 0.9em;
-      }
-      .download-link {
-        text-decoration: none;
-        color: #0066cc;
-        padding: 5px 10px;
-        background-color: #f0f8ff;
-        border-radius: 3px;
-      }
-      .download-link:hover {
-        background-color: #e0f0ff;
-      }
-      .no-files {
-        text-align: center;
-        color: #999;
-        padding: 20px;
-      }
-      /* 代码剪切板样式 */
-      .code-section {
-        margin-top: 40px;
-      }
-      .code-container {
-        position: relative;
-        margin-top: 20px;
-      }
-      .code-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        background-color: #f5f5f5;
-        padding: 10px 15px;
-        border-top-left-radius: 5px;
-        border-top-right-radius: 5px;
-        border: 1px solid #ddd;
-        border-bottom: none;
-      }
-      .code-title {
-        font-weight: bold;
-        color: #333;
-      }
-      .copy-button {
-        background-color: #4caf50;
-        color: white;
-        border: none;
-        padding: 5px 10px;
-        border-radius: 3px;
-        cursor: pointer;
-        font-size: 12px;
-      }
-      .copy-button:hover {
-        background-color: #45a049;
-      }
-      .copy-button.copied {
-        background-color: #2196f3;
-      }
-      .code-content {
-        background-color: #f8f8f8;
-        border: 1px solid #ddd;
-        border-bottom-left-radius: 5px;
-        border-bottom-right-radius: 5px;
-        padding: 15px;
-        font-family: "Courier New", Courier, monospace;
-        font-size: 14px;
-        line-height: 1.5;
-        white-space: pre-wrap;
-        word-wrap: break-word;
-        overflow-x: auto;
-      }
-      /* 导航链接 */
-      .nav-links {
-        text-align: center;
-        margin: 20px 0;
-      }
-      .nav-links a {
-        text-decoration: none;
-        color: #0066cc;
-        margin: 0 10px;
-        padding: 5px 10px;
-        border-radius: 3px;
-      }
-      .nav-links a:hover {
-        background-color: #f0f8ff;
-      }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        /* 标签页样式 */
+        .tabs {
+            display: flex;
+            background-color: #f5f5f5;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .tab {
+            padding: 15px 20px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-size: 16px;
+            font-weight: bold;
+            color: #666;
+            transition: all 0.3s ease;
+            flex: 1;
+            text-align: center;
+        }
+        
+        .tab:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .tab.active {
+            background-color: white;
+            color: #333;
+            border-bottom: 2px solid #4CAF50;
+        }
+        
+        /* 标签内容样式 */
+        .tab-content {
+            padding: 20px;
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+        
+        h2 {
+            color: #333;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+        
+        /* 文件列表样式 */
+        .file-list {
+            margin-top: 20px;
+        }
+        
+        .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            transition: background-color 0.3s ease;
+        }
+        
+        .file-item:hover {
+            background-color: #f9f9f9;
+        }
+        
+        .file-name {
+            font-weight: bold;
+        }
+        
+        .file-size {
+            color: #666;
+            font-size: 0.9em;
+            margin-left: 10px;
+        }
+        
+        .download-link {
+            text-decoration: none;
+            color: #0066cc;
+            padding: 5px 10px;
+            background-color: #f0f8ff;
+            border-radius: 3px;
+            transition: background-color 0.3s ease;
+        }
+        
+        .download-link:hover {
+            background-color: #e0f0ff;
+        }
+        
+        .no-files {
+            text-align: center;
+            color: #999;
+            padding: 40px 20px;
+            font-size: 16px;
+        }
+        
+        /* 代码剪切板样式 */
+        .code-section {
+            margin-top: 20px;
+        }
+        
+        .code-container {
+            position: relative;
+            margin-top: 20px;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f5f5f5;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-bottom: none;
+        }
+        
+        .code-title {
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .copy-button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background-color 0.3s ease;
+        }
+        
+        .copy-button:hover {
+            background-color: #45a049;
+        }
+        
+        .copy-button.copied {
+            background-color: #2196F3;
+        }
+        
+        /* 代码块样式 */
+        .code-wrapper {
+            display: flex;
+            border: 1px solid #ddd;
+            overflow: hidden;
+        }
+        
+        .line-numbers {
+            background-color: #f0f0f0;
+            padding: 15px 10px;
+            text-align: right;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            color: #888;
+            border-right: 1px solid #ddd;
+            user-select: none;
+        }
+        
+        .code-content {
+            flex: 1;
+            background-color: #f8f8f8;
+            padding: 15px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            overflow-x: auto;
+        }
+        
+        /* 代码高亮 */
+        .keyword {
+            color: #0000ff;
+            font-weight: bold;
+        }
+        
+        .string {
+            color: #008000;
+        }
+        
+        .comment {
+            color: #808080;
+            font-style: italic;
+        }
+        
+        .function {
+            color: #000080;
+        }
+        
+        .operator {
+            color: #800080;
+        }
+        
+        .number {
+            color: #ff0000;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 600px) {
+            body {
+                margin: 10px;
+            }
+            
+            .container {
+                max-width: 100%;
+            }
+            
+            .tab {
+                padding: 10px;
+                font-size: 14px;
+            }
+            
+            .tab-content {
+                padding: 15px;
+            }
+            
+            .file-item {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 15px;
+            }
+            
+            .file-item div {
+                margin-bottom: 10px;
+            }
+            
+            .download-link {
+                align-self: flex-end;
+            }
+        }
     </style>
-  </head>
-  <body>
-    <div class="nav-links">
-      <a href="#">文件列表</a>
-      <a href="#code">代码剪切板</a>
-    </div>
-
+</head>
+<body>
     <div class="container">
-      <h1>个人网盘</h1>
-      <div class="file-list" id="fileList">
-        <!-- 文件列表将通过JavaScript动态生成 -->
-      </div>
-    </div>
-
-    <div class="container code-section" id="code">
-      <h2>代码剪切板</h2>
-      <div class="code-container">
-        <div class="code-header">
-          <span class="code-title">示例代码</span>
-          <button class="copy-button" onclick="copyCode('code1')">
-            复制代码
-          </button>
+        <!-- 标签页 -->
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('files')">文件列表</button>
+            <button class="tab" onclick="switchTab('code')">代码剪切板</button>
         </div>
-        <pre class="code-content" id="code1">
-# 示例Python代码
-
-def hello_world():
-    print("Hello, World!")
-
-if __name__ == "__main__":
-    hello_world()
-</pre
-        >
-      </div>
-
-      <div class="code-container" style="margin-top: 30px">
-        <div class="code-header">
-          <span class="code-title">示例JavaScript代码</span>
-          <button class="copy-button" onclick="copyCode('code2')">
-            复制代码
-          </button>
+        
+        <!-- 文件列表内容 -->
+        <div class="tab-content active" id="files-content">
+            <h1>个人网盘</h1>
+            <div class="file-list" id="fileList">
+                <!-- 文件列表将通过JavaScript动态生成 -->
+            </div>
         </div>
-        <pre class="code-content" id="code2">
-// 示例JavaScript代码
+        
+        <!-- 代码剪切板内容 -->
+        <div class="tab-content" id="code-content">
+            <h2>代码剪切板</h2>
+            <div class="code-container">
+                <div class="code-header">
+                    <span class="code-title">示例Python代码</span>
+                    <button class="copy-button" onclick="copyCode('code1')">复制代码</button>
+                </div>
+                <div class="code-wrapper">
+                    <div class="line-numbers" id="line-numbers-1">1
+2
+3
+4
+5
+6
+7
+8</div>
+                    <pre class="code-content" id="code1"><span class="comment"># 示例Python代码</span>
 
-function greet(name) {
-    return `Hello, ${name}!`;
+<span class="keyword">def</span> <span class="function">hello_world</span>():
+    <span class="function">print</span>(<span class="string">"Hello, World!"</span>)
+
+<span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:
+    <span class="function">hello_world</span>()
+</pre>
+                </div>
+            </div>
+            
+            <div class="code-container" style="margin-top: 30px;">
+                <div class="code-header">
+                    <span class="code-title">示例JavaScript代码</span>
+                    <button class="copy-button" onclick="copyCode('code2')">复制代码</button>
+                </div>
+                <div class="code-wrapper">
+                    <div class="line-numbers" id="line-numbers-2">1
+2
+3
+4
+5
+6
+7
+8</div>
+                    <pre class="code-content" id="code2"><span class="comment">// 示例JavaScript代码</span>
+
+<span class="keyword">function</span> <span class="function">greet</span>(<span class="keyword">name</span>) {
+    <span class="keyword">return</span> <span class="string">`Hello, ${name}!`</span>;
 }
 
-console.log(greet("World"));
-</pre
-        >
-      </div>
-    </div>
-
-    <script>
-      // 文件数据 - 添加新文件时需要更新这里
-      const files = [{ name: "测试文件.txt", size: "1KB" }];
-
-      // 生成文件列表
-      function generateFileList() {
-        const fileListElement = document.getElementById("fileList");
-
-        if (files.length === 0) {
-          fileListElement.innerHTML = '<div class="no-files">暂无文件</div>';
-          return;
-        }
-
-        let html = "";
-        files.forEach((file) => {
-          html += `
-                    <div class="file-item">
-                        <div>
-                            <span class="file-name">${file.name}</span>
-                            <span class="file-size"> (${file.size})</span>
-                        </div>
-                        <a href="files/${file.name}" class="download-link" download>${file.name}</a>
-                    </div>
-                `;
-        });
-
-        fileListElement.innerHTML = html;
-      }
-
-      // 复制代码功能
-      function copyCode(elementId) {
-        const codeElement = document.getElementById(elementId);
-        const code = codeElement.textContent;
-
-        navigator.clipboard
-          .writeText(code)
-          .then(() => {
-            // 显示复制成功
-            const button =
-              codeElement.previousElementSibling.querySelector(".copy-button");
-            const originalText = button.textContent;
-            button.textContent = "已复制!";
-            button.classList.add("copied");
-
-            // 2秒后恢复原状
-            setTimeout(() => {
-              button.textContent = originalText;
-              button.classList.remove("copied");
-            }, 2000);
-          })
-          .catch((err) => {
-            console.error("复制失败:", err);
-          });
-      }
-
-      // 页面加载完成后生成文件列表
-      window.onload = function () {
-        generateFileList();
-
-        // 检查URL锚点，如果是#code则滚动到代码部分
-        if (window.location.hash === "#code") {
-          document
-            .getElementById("code")
-            .scrollIntoView({ behavior: "smooth" });
-        }
-      };
-    </script>
-  </body>
-</html>     </div>
+<span class="function">console</span>.<span class="function">log</span>(<span class="function">greet</span>(<span class="string">"World"</span>));
+</pre>
+                </div>
+            </div>
         </div>
     </div>
     
@@ -298,7 +378,7 @@ console.log(greet("World"));
                     <div class="file-item">
                         <div>
                             <span class="file-name">${file.name}</span>
-                            <span class="file-size"> (${file.size})</span>
+                            <span class="file-size">${file.size}</span>
                         </div>
                         <a href="files/${file.name}" class="download-link" download>${file.name}</a>
                     </div>
