@@ -292,14 +292,7 @@
                     <button class="copy-button" onclick="copyCode('code1')">复制代码</button>
                 </div>
                 <div class="code-wrapper">
-                    <div class="line-numbers" id="line-numbers-1">1
-2
-3
-4
-5
-6
-7
-8</div>
+                    <div class="line-numbers" id="line-numbers-1">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8</div>
                     <pre class="code-content" id="code1"><span class="comment"># 示例Python代码</span>
 
 <span class="keyword">def</span> <span class="function">hello_world</span>():
@@ -317,14 +310,7 @@
                     <button class="copy-button" onclick="copyCode('code2')">复制代码</button>
                 </div>
                 <div class="code-wrapper">
-                    <div class="line-numbers" id="line-numbers-2">1
-2
-3
-4
-5
-6
-7
-8</div>
+                    <div class="line-numbers" id="line-numbers-2">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8</div>
                     <pre class="code-content" id="code2"><span class="comment">// 示例JavaScript代码</span>
 
 <span class="keyword">function</span> <span class="function">greet</span>(<span class="keyword">name</span>) {
@@ -414,6 +400,11 @@
         // 页面加载完成后生成文件列表
         window.onload = function() {
             generateFileList();
+            
+            // 检查URL锚点，如果是#code则切换到代码剪切板标签
+            if (window.location.hash === '#code') {
+                switchTab('code');
+            }
         };
     </script>
 </body>
