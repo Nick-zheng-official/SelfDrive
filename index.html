@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
@@ -254,4 +254,87 @@ console.log(greet("World"));
       };
     </script>
   </body>
+</html>     </div>
+        </div>
+    </div>
+    
+    <script>
+        // 文件数据 - 添加新文件时需要更新这里
+        const files = [
+            { name: "测试文件.txt", size: "1KB" }
+        ];
+
+        // 标签页切换功能
+        function switchTab(tabName) {
+            // 隐藏所有内容
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // 移除所有标签的活动状态
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // 显示选中的内容和标签
+            document.getElementById(tabName + '-content').classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+
+        // 生成文件列表
+        function generateFileList() {
+            const fileListElement = document.getElementById('fileList');
+            
+            if (files.length === 0) {
+                fileListElement.innerHTML = '<div class="no-files">暂无文件</div>';
+                return;
+            }
+            
+            let html = '';
+            files.forEach(file => {
+                html += `
+                    <div class="file-item">
+                        <div>
+                            <span class="file-name">${file.name}</span>
+                            <span class="file-size"> (${file.size})</span>
+                        </div>
+                        <a href="files/${file.name}" class="download-link" download>${file.name}</a>
+                    </div>
+                `;
+            });
+            
+            fileListElement.innerHTML = html;
+        }
+
+        // 复制代码功能
+        function copyCode(elementId) {
+            const codeElement = document.getElementById(elementId);
+            // 移除HTML标签，只复制纯文本
+            const code = codeElement.textContent;
+            
+            navigator.clipboard.writeText(code).then(() => {
+                // 显示复制成功
+                const button = codeElement.closest('.code-container').querySelector('.copy-button');
+                const originalText = button.textContent;
+                button.textContent = '已复制!';
+                button.classList.add('copied');
+                
+                // 2秒后恢复原状
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.classList.remove('copied');
+                }, 2000);
+            }).catch(err => {
+                console.error('复制失败:', err);
+            });
+        }
+
+        // 页面加载完成后生成文件列表
+        window.onload = function() {
+            generateFileList();
+        };
+    </script>
+</body>
 </html>
